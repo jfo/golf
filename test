@@ -1,0 +1,29 @@
+#!/usr/bin/php
+<?php
+
+$file = empty($argv[1]) ? 'golf.php' : $argv[1];
+
+$tests = array(
+    '0 5 1' => 20,
+    '100 3 1' => 304,
+    '-2 2 -1' => -5,
+);
+
+$failures = 0;
+
+foreach ($tests as $args => $result) {
+    $cmd = "php {$file} {$args}";
+    $actual = `$cmd`;
+    $expected = "{$result}\n";
+
+    if ($actual !== $expected) {
+        echo "Failure: args {$args} returned '{$actual}', expected '{$expected}'\n";
+        $failures++;
+    }
+}
+
+if (empty($failures)) {
+    $size = trim(str_replace($file, '', `wc -c {$file}`));
+
+    echo "All tests passed! {$file} is {$size} bytes\n";
+}
